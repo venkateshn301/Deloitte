@@ -4,7 +4,7 @@ Parameters:
   GitHubOwner:
     Type: String
     AllowedPattern: '[A-Za-z0-9-]+'
-    Default: quick-refs
+    Default: venkateshn301
   GitHubRepository:
     Type: String
     AllowedPattern: '[A-Za-z0-9-]+'
@@ -242,5 +242,18 @@ Resources:
                 Version: '1'
               Configuration:
                 ProjectName: !Ref CodeBuilProjectDeployDev
+              InputArtifacts:
+                - Name: BuildOutput
+        - Name: Qa   
+          Actions:
+            - Name: Deploy
+              RunOrder: 1
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              Configuration:
+                ProjectName: !Ref CodeBuilProjectDeployQa
               InputArtifacts:
                 - Name: BuildOutput        
