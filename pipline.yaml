@@ -96,6 +96,25 @@ Resources:
         ComputeType: BUILD_GENERAL1_SMALL
         Image: !Ref CodeBuildEnvironmentImage
 
+ CodeBuilProjectDeployDev:  
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Sub '${AWS::StackName}-deploy-dev'
+      ServiceRole: !GetAtt 
+        - CodeBuildServiceRole
+        - Arn
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: deployspec.yaml
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: !Ref CodeBuildEnvironmentImage
+        EnvironmentVariables:
+          - Name: ENV_NAME
+            Value: dev
 
 
 
@@ -213,3 +232,15 @@ Resources:
                 - Name: BuildOutput
               InputArtifacts:
                 - Name: SourceCode  
+        - Name: Dev   
+          Actions:
+            - Name: Deploy
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: '1'
+              Configuration:
+                ProjectName: !Ref CodeBuilProjectDeployDev
+              InputArtifacts:
+                - Name: BuildOutput        
