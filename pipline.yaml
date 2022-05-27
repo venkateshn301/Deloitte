@@ -323,4 +323,3 @@ Resources:
                 ProjectName: !Ref CodeBuilProjectDeployProd
               InputArtifacts:
                 - Name: BuildOutput
-
